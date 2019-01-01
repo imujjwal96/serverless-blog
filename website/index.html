@@ -13,33 +13,62 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/railscasts.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>
-            $.ajax({
-                url: "https://jam4wmpy5g.execute-api.ap-south-1.amazonaws.com/development",
-                type: "GET",
-                crossDomain: true,
-                contentType: 'application/json',
-                success: function (response) {
-                    $.each(response, (index, value) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const post = urlParams.get('post');
+
+            if (post === null || post === '') {
+                $.ajax({
+                    url: "https://jam4wmpy5g.execute-api.ap-south-1.amazonaws.com/development",
+                    type: "GET",
+                    crossDomain: true,
+                    contentType: 'application/json',
+                    success: function (response) {
+                        $.each(response, (index, value) => {
+                            var blog = '<article class="blog-post">\
+                                            <div class="blog-title">\
+                                                <h2><a href="?post=' + value.slug + '">'+ value.title +'</a></h2>\
+                                            </div>\
+                                            <div style="font-weight: bold" class="blog-post-meta">' + value.date + ' by ' + value.author.name + '</div>\
+                                            <div class="blog-body">\
+                                                <p>' + value.plot +  '\
+                                                <div class="blog-footer">\
+                                                    <a href="?post=' + value.slug + '">Read more</a>\
+                                                </div>\
+                                            </div>\
+                                        </article>';
+                            $('.blogs').append(blog);                                
+                        }); 
+                    },
+                    error: function (xhr, status) {
+                        console.log(status);
+                        console.log(xhr);
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: "https://jam4wmpy5g.execute-api.ap-south-1.amazonaws.com/development/post?slug=" + post,
+                    type: "GET",
+                    crossDomain: true,
+                    contentType: 'application/json',
+                    success: function (response) {
                         var blog = '<article class="blog-post">\
                                         <div class="blog-title">\
-                                            <h2><a href="post/' + value.slug + '">'+ value.title +'</a></h2>\
+                                            <h2><a href="?post=' + response.slug + '">'+ response.title +'</a></h2>\
                                         </div>\
-                                        <div style="font-weight: bold" class="blog-post-meta">' + value.date + ' by ' + value.author.name + '</div>\
+                                        <div style="font-weight: bold" class="blog-post-meta">' + response.date + ' by ' + response.author.name + '</div>\
                                         <div class="blog-body">\
-                                            <p>' + value.plot +  '\
-                                            <div class="blog-footer">\
-                                                <a href="post/' + value.slug + '">Read more</a>\
-                                            </div>\
+                                            <p>' + response.body +  '\
                                         </div>\
                                     </article>';
                         $('.blogs').append(blog);                                
-                    }); 
-                },
-                error: function (xhr, status) {
-                    console.log(status);
-                    console.log(xhr);
-                }
-            });
+                    },
+                    error: function (xhr, status) {
+                        console.log(status);
+                        console.log(xhr);
+                    }
+                });
+            }
+            
 
 
         </script>
@@ -83,7 +112,7 @@
                         <a href="/"><img id="logo" src="images/logo2.png" title="Ujjwal Bhardwaj"></a>
                         <p id="tagline">Student | Freelance Web Developer | Open Source Developer</p>
                         <p>
-                            <a href="/post/about-me" target="_blank" class="links">About me</a>
+                            <a href="?post=about-me" target="_blank" class="links">About me</a>
                             <a href="/resume" target="_blank" class="links">Resume</a>
                         </p>
                         <p class="socials"><a href="mail:ujjwalb1996@gmail.com" target="_blank"><i class="fa fa-envelope"></i></a><a href="https://www.facebook.com/imujjwal96" target="_blank"><i class="fa fa-facebook"></i></a><a href="https://in.linkedin.com/in/ujjwal-bhardwaj-b6b46a80" target="_blank"><i class="fa fa-linkedin"></i></a><a href="https://www.instagram.com/ujjwalbhardwaj96" target="_blank"><i class="fa fa-instagram"></i></a><a href="https://github.com/imujjwal96" target="_blank"><i class="fa fa-github"></i></a></p>
