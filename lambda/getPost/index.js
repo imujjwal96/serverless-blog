@@ -1,14 +1,8 @@
 'use strict';
 var cf = require('./cf');
 var helpers = require('./helpers');
-var dateFormat = require('dateformat');
-var Q = require('q');
-var md = require('marked');
 
 exports.handler = (event, context, callback) => {
-    console.log("oye");
-    console.log(event);
-
     cf.api.getEntries({
         'content_type': cf.const.POST_CT,
         'fields.slug': event.queryStringParameters.slug
